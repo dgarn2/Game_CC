@@ -8,13 +8,18 @@ public class bossRun : StateMachineBehaviour
 public float speed = 2.5f;
 Transform player;
 Rigidbody2D rb;
-
+Transform bossPos;
+private combat playerHP;
+private float timer=0;
+public float nect;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     { 
+        playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<combat>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         rb = animator.GetComponent<Rigidbody2D>();
+        bossPos =  animator.GetComponent<Transform>();
     //    
     }
 
@@ -25,6 +30,12 @@ Rigidbody2D rb;
         Vector2 newPos = Vector2.MoveTowards(rb.position, target, speed * Time.fixedDeltaTime);
         rb.MovePosition(newPos);
         
+        if ((Vector2.Distance(target, new Vector2(bossPos.position.x, bossPos.position.y)) < 1.1) && (timer-nect  > 560)){
+           Debug.Log(combat.playerHealth -= 1);
+            nect= timer;
+           Debug.Log(GameObject.FindGameObjectWithTag("Player"));
+        }
+        timer+=1;
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

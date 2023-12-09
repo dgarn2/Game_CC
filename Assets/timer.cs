@@ -9,18 +9,19 @@ public class Timer : MonoBehaviour
     public bool timerIsRunning = false;
     
     [SerializeField]
-    private TMPro.TextMeshProUGUI firstMin;
+    private TextMeshProUGUI firstMinute;
+
     [SerializeField]
-    public TextMeshProUGUI secondMin;
+    private TextMeshProUGUI secondMin;
     [SerializeField]
-    public TextMeshProUGUI seperator;
+    private TextMeshProUGUI seperator;
     [SerializeField]
-    public TextMeshProUGUI firstSec;
+    private TextMeshProUGUI firstSec;
     [SerializeField]
-    public TextMeshProUGUI secondSec;
+    private TextMeshProUGUI secondSec;
     
-    public float timeStart = 0;
-    public float timer;
+    private float timeStart = 0;
+    private float timer;
     private float flashTimer;
     private float flashDuration = 1f;
     [SerializeField]
@@ -28,7 +29,7 @@ public class Timer : MonoBehaviour
     private float timeDuration = 3000f;
 
 
-    private void Start()
+    void Start()
     {
         // Starts the timer automatically
 
@@ -70,7 +71,7 @@ public class Timer : MonoBehaviour
         }
     }
 */
-    public void ResetTimer(){
+    private void ResetTimer(){
         if(countDown){
             timer = timeDuration;
         }else{
@@ -79,18 +80,24 @@ public class Timer : MonoBehaviour
         SetTextDisplay(true);
     }
 
-    public void UpdateTimer(float time){
+    private void UpdateTimer(float time){
         float minute = Mathf.FloorToInt(time/60);
         float seconds = Mathf.FloorToInt(time %60);
 
         string currentTime = string.Format("{00:00}{1:00}", minute, seconds);
+        firstMinute.text =  currentTime[0].ToString();
+        secondMin.text =  currentTime[1].ToString();
+
+    
+       
+        firstSec.text =  currentTime[2].ToString();
+        secondSec.text =  currentTime[3].ToString();
         
-        firstMin.text =  currentTime[0].ToString();
-        secondMin.text = currentTime[1].ToString();
-        firstSec.text = currentTime[2].ToString();
-        secondSec.text = currentTime[3].ToString();
+        
+        
     }
-    public void Flash(){
+
+    private void Flash(){
         if(timer != 0){
             timer = 0;
             UpdateTimer(timer);
@@ -109,10 +116,10 @@ public class Timer : MonoBehaviour
     }
 
     private void SetTextDisplay(bool enabled){
-        firstMin.enabled = enabled;
-        secondMin.enabled = enabled;
-        firstSec.enabled = enabled;
-        secondSec.enabled = enabled;
+       // firstMinute.enabled = enabled;
+        //secondMin.enabled = enabled;
+        //firstSec.enabled = enabled;
+        //secondSec.enabled = enabled;
     }
     
 }
