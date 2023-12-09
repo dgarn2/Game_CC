@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class CharacterController2D : MonoBehaviour
 {
-	[SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
+	[SerializeField] public float m_JumpForce = 400f;							// Amount of force added when the player jumps.
 	[Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;			// Amount of maxSpeed applied to crouching movement. 1 = 100%
 	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 	[SerializeField] private bool m_AirControl = false;							// Whether or not a player can steer while jumping;
@@ -18,6 +19,7 @@ public class CharacterController2D : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
+	public float movementMultipler = 1f; 
 
 	[Header("Events")]
 	[Space]
@@ -30,6 +32,20 @@ public class CharacterController2D : MonoBehaviour
 	public BoolEvent OnCrouchEvent;
 	private bool m_wasCrouching = false;
 
+
+	// falling off map logic
+	 // The threshold value to determine if the player has fallen off
+    public float fallThreshold = -8f;
+    // The player's respawn position
+    private Vector3 respawnPosition;
+
+
+	// teleport to boss fight logic
+	// Define the door area
+    public Vector2 doorAreaMin = new Vector2(88, 3); // Set these in the Inspector to the bottom-left corner of the door
+	public Vector2 doorAreaMax = new Vector2(91, 7); // Set these in the Inspector to the top-right corner of the door
+    private string nextLevel = "BossFight";    // Name of the next level to load
+
 	private void Awake()
 	{
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -39,6 +55,8 @@ public class CharacterController2D : MonoBehaviour
 
 		if (OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
+
+		respawnPosition = transform.position; ////// 
 	}
 
 	private void FixedUpdate()
@@ -58,6 +76,46 @@ public class CharacterController2D : MonoBehaviour
 					OnLandEvent.Invoke();
 			}
 		}
+		
+		// Check if the player has fallen below the threshold
+        if (transform.position.y < fallThreshold)
+        {
+            // Respawn the player
+            Respawn();
+        }
+
+		// Check if the player is within the door area
+        if (transform.position.x >= doorAreaMin.x && transform.position.x <= doorAreaMax.x &&
+            transform.position.y >= doorAreaMin.y && transform.position.y <= doorAreaMax.y)
+        {
+            // Load the next level
+            //SceneManager.LoadScene(nextLevel);
+			transform.position = new Vector3(190f, 69f,0f);
+        }
+
+	}
+
+	 // Method to modify the player's jump force
+    public void IncreaseJumpHeight()
+    {
+        m_JumpForce += m_JumpForce * (0.25f);
+    }
+
+	public void IncreaseMovementSpeed()
+    {
+        movementMultipler += movementMultipler * 0.25f;
+    }
+
+	public void Respawn() {
+		// Reset the player's position to the respawn position
+        transform.position = respawnPosition;
+
+        // Optionally reset velocity if your character uses physics
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+        }
 	}
 
 
@@ -106,7 +164,7 @@ public class CharacterController2D : MonoBehaviour
 			}
 
 			// Move the character by finding the target velocity
-			Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
+			Vector3 targetVelocity = new Vector2(move * 10f * movementMultipler, m_Rigidbody2D.velocity.y);
 			// And then smoothing it out and applying it to the character
 			m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
@@ -126,6 +184,7 @@ public class CharacterController2D : MonoBehaviour
 		// If the player should jump...
 		if (m_Grounded && jump)
 		{
+
 			// Add a vertical force to the player.
 			m_Grounded = false;
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));

@@ -55,11 +55,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\CharacterController2D.cs" />
+    <Compile Include="Assets\InteractableObject.cs" />
     <Compile Include="Assets\playermovement.cs" />
+    <Compile Include="Assets\controller.cs" />
     <Compile Include="Assets\enemy.cs" />
     <Compile Include="Assets\combat.cs" />
+    <Compile Include="Assets\NewBehaviourScript.cs" />
+    <Compile Include="Assets\animations\bossRun.cs" />
     <Compile Include="Assets\boss1.cs" />
+    <Compile Include="Assets\hpCreate.cs" />
+    <Compile Include="Assets\TitleScreenManager.cs" />
     <Compile Include="Assets\timer.cs" />
+    <Compile Include="Assets\LevelTransistion.cs" />
+    <Compile Include="Assets\bossBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

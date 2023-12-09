@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class combat : MonoBehaviour
 {
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public LayerMask enemyLayers;
-    public int attckDamage = 40;
+    public int attckDamage = 1;
     
     public static int playerHealth = 4;
     public static int playerMaxHealth = 4;
@@ -20,12 +21,19 @@ public class combat : MonoBehaviour
     public Image hp4;
     public List <Image> imageList = new List<Image>();
 
+
+    public AudioSource AudioSource;
     void Start(){
+        AudioSource = GetComponent<AudioSource>();
+
         //imageList = new List<Image>();
-        hp1 = GameObject.Find("Canvas").transform.GetChild(5).gameObject.GetComponent<Image>();
-        hp2 = GameObject.Find("Canvas").transform.GetChild(6).gameObject.GetComponent<Image>();
-        hp3 = GameObject.Find("Canvas").transform.GetChild(7).gameObject.GetComponent<Image>();
-        hp4 = GameObject.Find("Canvas").transform.GetChild(8).gameObject.GetComponent<Image>();
+        hp1 = GameObject.Find("Canvas").transform.GetChild(7).gameObject.GetComponent<Image>();
+        hp2 = GameObject.Find("Canvas").transform.GetChild(8).gameObject.GetComponent<Image>();
+        hp3 = GameObject.Find("Canvas").transform.GetChild(9).gameObject.GetComponent<Image>();
+        hp4 = GameObject.Find("Canvas").transform.GetChild(10).gameObject.GetComponent<Image>();
+        //var tempColor = hp1.color;
+        //tempColor.a = 0f;
+        //hp1.color = tempColor;
         //imageList.add(hp1);
        // imageList.add(hp2);
        // imageList.add(hp3);
@@ -44,12 +52,17 @@ public class combat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+  
         if (lastHealth != playerHealth){
             var tempColor = hp1.color; 
             var tempColor1 = hp1.color;
             tempColor.a = 1f;
             tempColor1.a = 0f;
             if (playerHealth == 0){
+                hp1.color = tempColor1;
+                hp2.color = tempColor1;
+                hp3.color = tempColor1;
+                hp4.color = tempColor1;
 
             }else if(playerHealth == 1){
                 hp1.color = tempColor;
@@ -78,7 +91,6 @@ public class combat : MonoBehaviour
 
 
 
-
             //for(var i = 0; i < playerHealth; i++){
 
            //         imageList[i].color = tempColor;
@@ -87,12 +99,13 @@ public class combat : MonoBehaviour
 
              //       imageList[i].color = tempColor;
            // }
-        }
+       }
 
 
 
         if (Input.GetKeyDown(KeyCode.F)){
             Debug.Log("f");
+            AudioSource.Play();
             Attack();
         }
     }

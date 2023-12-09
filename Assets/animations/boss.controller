@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1.99
+  nect: 0
 --- !u!1102 &-4239924389457951956
 AnimatorState:
   serializedVersion: 6
